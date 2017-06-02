@@ -51,11 +51,40 @@ return [
             });
         }
 
+        if ($util->tableExists('@blog_category') === false) {
+            $util->createTable('@blog_category', function ($table) {
+                $table->addColumn('id', 'integer', ['unsigned' => true, 'length' => 10, 'autoincrement' => true]);
+                $table->addColumn('name', 'string', ['length' => 255]);
+                $table->addColumn('slug', 'string', ['length' => 255]);
+                $table->setPrimaryKey(['id']);
+                $table->addUniqueIndex(['slug'], '@BLOG_CATEGORY_SLUG');
+            });
+        }
+
+        if ($util->tableExists('@blog_post_categories') === false) {
+            $util->createTable('@blog_post_categories', function ($table) {
+                $table->addColumn('id', 'integer', ['unsigned' => true, 'length' => 10, 'autoincrement' => true]);
+                $table->addColumn('post_id', 'integer', ['unsigned' => true, 'length' => 10]);
+                $table->addColumn('category_id', 'integer', ['unsigned' => true, 'length' => 10]);
+                $table->setPrimaryKey(['id']);
+                $table->addIndex(['post_id'], '@BLOG_POST_CATEGORIES_POST_ID');
+                $table->addIndex(['category_id'], '@BLOG_POST_CATEGORIES_CATEGORY_ID');
+            });
+        }
+
     },
 
     'uninstall' => function ($app) {
 
         $util = $app['db']->getUtility();
+
+        if ($util->tableExists('@blog_post_categories')) {
+            $util->dropTable('@blog_post_categories');
+        }
+
+        if ($util->tableExists('@blog_category')) {
+            $util->dropTable('@blog_category');
+        }
 
         if ($util->tableExists('@blog_post')) {
             $util->dropTable('@blog_post');
@@ -92,6 +121,36 @@ return [
             }
 
             $util->migrate();
+        },
+
+        '1.1.4' => function ($app) {
+
+            $db = $app['db'];
+            $util = $db->getUtility();
+
+            if ($util->tableExists('@blog_category') === false) {
+                $util->createTable('@blog_category', function ($table) {
+                    $table->addColumn('id', 'integer', ['unsigned' => true, 'length' => 10, 'autoincrement' => true]);
+                    $table->addColumn('name', 'string', ['length' => 255]);
+                    $table->addColumn('slug', 'string', ['length' => 255]);
+                    $table->setPrimaryKey(['id']);
+                    $table->addUniqueIndex(['slug'], '@BLOG_CATEGORY_SLUG');
+                });
+            }
+
+            if ($util->tableExists('@blog_post_categories') === false) {
+                $util->createTable('@blog_post_categories', function ($table) {
+                    $table->addColumn('id', 'integer', ['unsigned' => true, 'length' => 10, 'autoincrement' => true]);
+                    $table->addColumn('post_id', 'integer', ['unsigned' => true, 'length' => 10]);
+                    $table->addColumn('category_id', 'integer', ['unsigned' => true, 'length' => 10]);
+                    $table->setPrimaryKey(['id']);
+                    $table->addIndex(['post_id'], '@BLOG_POST_CATEGORIES_POST_ID');
+                    $table->addIndex(['category_id'], '@BLOG_POST_CATEGORIES_CATEGORY_ID');
+                });
+            }
+
+            $util->migrate();
+
         }
 
     ]

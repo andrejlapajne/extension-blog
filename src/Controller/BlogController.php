@@ -3,6 +3,7 @@
 namespace Pagekit\Blog\Controller;
 
 use Pagekit\Application as App;
+use Pagekit\Blog\Model\Category;
 use Pagekit\Blog\Model\Comment;
 use Pagekit\Blog\Model\Post;
 use Pagekit\User\Model\Role;
@@ -44,7 +45,7 @@ class BlogController
     {
         try {
 
-            if (!$post = Post::where(compact('id'))->related('user')->first()) {
+            if (!$post = Post::where(compact('id'))->related('user', 'categories')->first()) {
 
                 if ($id) {
                     App::abort(404, __('Invalid post id.'));
@@ -88,6 +89,8 @@ class BlogController
                 ],
                 '$data' => [
                     'post'     => $post,
+                    'post_categories' => array_values($post->categories ? : []),
+                    'categories' => array_values(Category::findAll()),
                     'statuses' => Post::getStatuses(),
                     'roles'    => array_values(Role::findAll()),
                     'canEditAll' => $user->hasAccess('blog: manage all posts'),

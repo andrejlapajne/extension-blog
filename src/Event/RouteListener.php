@@ -24,6 +24,9 @@ class RouteListener implements EventSubscriberInterface
         if ($route->getName() == '@blog/id' && UrlResolver::getPermalink()) {
             App::routes()->alias(dirname($route->getPath()).'/'.ltrim(UrlResolver::getPermalink(), '/'), '@blog/id', ['_resolver' => 'Pagekit\Blog\UrlResolver']);
         }
+        if ($route->getName() == '@blog/category') {
+            App::routes()->alias(dirname($route->getPath()).'/{category}/', '@blog/category', ['_resolver' => 'Pagekit\Blog\CategoryUrlResolver']);
+        }
     }
 
     /**
