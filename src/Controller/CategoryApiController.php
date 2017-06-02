@@ -6,7 +6,7 @@ use Pagekit\Application as App;
 use Pagekit\Blog\Model\Category;
 
 /**
- * @Access("blog: manage own posts || blog: manage all posts")
+ * @Access("blog: manage categories")
  * @Route("category", name="category")
  */
 class CategoryApiController

@@ -19,6 +19,11 @@ class Category implements \JsonSerializable
 
     /** @Column(type="string") */
     public $slug;
+
+    /**
+     * @ManyToMany(targetEntity="Posts", tableThrough="@blog_post_categories", keyThroughFrom="category_id", keyThroughTo="post_id")
+     */
+    public $posts;
     
     /**
      * @Saving

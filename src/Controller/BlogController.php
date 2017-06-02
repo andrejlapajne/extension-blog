@@ -134,6 +134,69 @@ class BlogController
     }
 
     /**
+     * @Access("blog: manage categories")
+     * @Request({"filter": "array", "page": "int"})
+     */
+    public function categoriesAction($filter = null, $page = null) 
+    {
+        return [
+            '$view' => [
+                'title' => __('Categories'),
+                'name'  => 'blog/admin/categories-index.php'
+            ],
+            '$data' => [
+                'config'   => [
+                    'filter' => (object) $filter,
+                    'page'   => $page
+                ]
+            ]
+        ];
+    }
+
+    /**
+     * @Route("/category/edit", name="category/edit")
+     * @Access("blog: manage categories")
+     * @Request({"id": "int"})
+     */
+    public function categoryEditAction($id = 0) {
+        try {
+
+            if (!$category = Category::where(compact('id'))->related('posts')->first()) {
+
+                if ($id) {
+                    App::abort(404, __('Invalid category id.'));
+                }
+
+                $module = App::module('blog');
+
+                $category = Category::create();
+            }
+
+            $user = App::user();
+            if(!$user->hasAccess('blog: manage categories')) {
+                App::abort(403, __('Insufficient User Rights.'));
+            }
+
+            return [
+                '$view' => [
+                    'title' => $id ? __('Edit Category') : __('Add Category'),
+                    'name'  => 'blog/admin/category-edit.php'
+                ],
+                '$data' => [
+                    'category'     => $category                    
+                ],
+                'category' => $category
+            ];
+
+        } catch (\Exception $e) {
+
+            App::message()->error($e->getMessage());
+
+            return App::redirect('@blog/categories');
+        }
+    }
+
+    /**
      * @Access("system: access settings")
      */
     public function settingsAction()

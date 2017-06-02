@@ -57,6 +57,10 @@ return [
             'title' => 'Manage comments',
             'description' => 'Approve, edit and delete comments'
         ],
+        'blog: manage categories' => [
+            'title' => 'Manage categories',
+            'description' => 'Approve, edit and delete categories'
+        ],
         'blog: post comments' => [
             'title' => 'Post comments',
             'description' => 'Allowed to write comments on the site'
@@ -92,6 +96,13 @@ return [
             'url' => '@blog/post',
             'active' => '@blog/post*',
             'access' => 'blog: manage own posts || blog: manage all posts'
+        ],
+        'blog: categories' => [
+            'label' => 'Categories',
+            'parent' => 'blog',
+            'url' => '@blog/categories',
+            'active' => '@blog/categor*',
+            'access' => 'blog: manage categories'
         ],
         'blog: comments' => [
             'label' => 'Comments',
