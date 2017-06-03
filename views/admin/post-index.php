@@ -48,7 +48,7 @@
                         <input-filter :title="$trans('Author')" :value.sync="config.filter.author" :options="authors" v-else></input-filter>
                     </th>
                     <th class="pk-table-width-100 uk-text-center" v-order:comment_count="config.filter.order">{{ 'Comments' | trans }}</th>
-                    <th class="pk-table-width-100">{{ 'Categories' | trans }}</th>
+                    <th class="pk-table-width-100">{{ 'Category' | trans }}</th>
                     <th class="pk-table-width-100" v-order:date="config.filter.order">{{ 'Date' | trans }}</th>
                     <th class="pk-table-width-200 pk-table-min-width-200">{{ 'URL' | trans }}</th>
                 </tr>
@@ -75,7 +75,7 @@
                         <a class="uk-text-nowrap" :class="{'pk-link-icon': !post.comments_pending}" :href="$url.route('admin/blog/comment', { post: post.id })" :title="'{0} No pending|{1} One pending|]1,Inf[ %comments% pending' | transChoice post.comments_pending {comments:post.comments_pending}" data-uk-tooltip><i class="pk-icon-comment uk-margin-small-right" :class="{'pk-icon-primary': post.comments_pending}"></i> {{ post.comment_count }}</a>
                     </td>
                     <td class="pk-table-text-break">
-                        {{ post.category_names }}
+                        {{ post.categoryName }}
                     </td>
                     <td>
                         {{ post.date | date }}

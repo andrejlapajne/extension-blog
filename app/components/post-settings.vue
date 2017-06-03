@@ -59,13 +59,11 @@
                 </div>
 
                 <div class="uk-form-row">
-                    <span class="uk-form-label">{{ 'Categories' | trans }}</span>
+                    <span for="form-category" class="uk-form-label">{{ 'Categories' | trans }}</span>
                     <div class="uk-form-controls">
-                        <ul class="uk-list">
-                            <li v-for="category in data.post_categories">
-                                {{ category.name }}
-                            </li>
-                        </ul>
+                        <select id="form-category" class="uk-width-1-1" v-model="post.category_id">
+                            <option v-for="category in data.categories" :value="category.id">{{category.name}}</option>
+                        </select>
                     </div>
                 </div>
 

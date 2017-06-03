@@ -45,7 +45,7 @@ class BlogController
     {
         try {
 
-            if (!$post = Post::where(compact('id'))->related('user', 'categories')->first()) {
+            if (!$post = Post::where(compact('id'))->related('user', 'category')->first()) {
 
                 if ($id) {
                     App::abort(404, __('Invalid post id.'));
@@ -89,7 +89,6 @@ class BlogController
                 ],
                 '$data' => [
                     'post'     => $post,
-                    'post_categories' => array_values($post->categories ? : []),
                     'categories' => array_values(Category::findAll()),
                     'statuses' => Post::getStatuses(),
                     'roles'    => array_values(Role::findAll()),

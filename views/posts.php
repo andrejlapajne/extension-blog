@@ -11,8 +11,8 @@
 
     <p class="uk-article-meta">
         <?= __('Written by %name% on %date%', ['%name%' => $this->escape($post->user->name), '%date%' => '<time datetime="'.$post->date->format(\DateTime::ATOM).'" v-cloak>{{ "'.$post->date->format(\DateTime::ATOM).'" | date "longDate" }}</time>' ]) ?>
-        <?php if ($post->category_names) : ?>
-            <br/><?= __('Categories: %categories%', ['%categories%' => implode(', ', $post->category_names)]) ?>
+        <?php if ($post->category) : ?>
+            <br/><?= __('Category: %category%', ['%category%' => $post->category]) ?>
         <?php endif; ?>
     </p>
 

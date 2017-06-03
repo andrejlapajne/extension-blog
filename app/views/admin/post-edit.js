@@ -37,7 +37,7 @@ window.Post = {
 
         save: function () {
             var data = {post: this.post, id: this.post.id};
-
+            
             this.$broadcast('save', data);
 
             this.resource.save({id: this.post.id}, data).then(function (res) {

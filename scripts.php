@@ -10,6 +10,7 @@ return [
             $util->createTable('@blog_post', function ($table) {
                 $table->addColumn('id', 'integer', ['unsigned' => true, 'length' => 10, 'autoincrement' => true]);
                 $table->addColumn('user_id', 'integer', ['unsigned' => true, 'length' => 10, 'default' => 0]);
+                $table->addColumn('category_id', 'integer', ['unsigned' => true, 'length' => 10]);
                 $table->addColumn('slug', 'string', ['length' => 255]);
                 $table->addColumn('title', 'string', ['length' => 255]);
                 $table->addColumn('status', 'smallint');
@@ -26,6 +27,7 @@ return [
                 $table->addIndex(['title'], '@BLOG_POST_TITLE');
                 $table->addIndex(['user_id'], '@BLOG_POST_USER_ID');
                 $table->addIndex(['date'], '@BLOG_POST_DATE');
+                $table->addIndex(['category_id'], '@BLOG_POST_CATEGORY_ID');                
             });
         }
 
@@ -61,26 +63,11 @@ return [
             });
         }
 
-        if ($util->tableExists('@blog_post_categories') === false) {
-            $util->createTable('@blog_post_categories', function ($table) {
-                $table->addColumn('id', 'integer', ['unsigned' => true, 'length' => 10, 'autoincrement' => true]);
-                $table->addColumn('post_id', 'integer', ['unsigned' => true, 'length' => 10]);
-                $table->addColumn('category_id', 'integer', ['unsigned' => true, 'length' => 10]);
-                $table->setPrimaryKey(['id']);
-                $table->addIndex(['post_id'], '@BLOG_POST_CATEGORIES_POST_ID');
-                $table->addIndex(['category_id'], '@BLOG_POST_CATEGORIES_CATEGORY_ID');
-            });
-        }
-
     },
 
     'uninstall' => function ($app) {
 
         $util = $app['db']->getUtility();
-
-        if ($util->tableExists('@blog_post_categories')) {
-            $util->dropTable('@blog_post_categories');
-        }
 
         if ($util->tableExists('@blog_category')) {
             $util->dropTable('@blog_category');
@@ -138,15 +125,10 @@ return [
                 });
             }
 
-            if ($util->tableExists('@blog_post_categories') === false) {
-                $util->createTable('@blog_post_categories', function ($table) {
-                    $table->addColumn('id', 'integer', ['unsigned' => true, 'length' => 10, 'autoincrement' => true]);
-                    $table->addColumn('post_id', 'integer', ['unsigned' => true, 'length' => 10]);
-                    $table->addColumn('category_id', 'integer', ['unsigned' => true, 'length' => 10]);
-                    $table->setPrimaryKey(['id']);
-                    $table->addIndex(['post_id'], '@BLOG_POST_CATEGORIES_POST_ID');
-                    $table->addIndex(['category_id'], '@BLOG_POST_CATEGORIES_CATEGORY_ID');
-                });
+            if ($util->tableExists('@blog_post') === false) {
+                $table = $util->getTable('@blog_post');
+                $table->addColumn('category_id', 'integer', ['unsigned' => true, 'length' => 10]);
+                $table->addIndex(['category_id'], '@BLOG_POST_CATEGORY_ID');  
             }
 
             $util->migrate();

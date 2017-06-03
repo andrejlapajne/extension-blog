@@ -70,18 +70,20 @@ class Post implements \JsonSerializable
      */
     public $comments;
 
-   /**
-     * @ManyToMany(targetEntity="Category", tableThrough="@blog_post_categories", keyThroughFrom="post_id", keyThroughTo="category_id")
-     * @OrderBy({"name" = "ASC"})
+   /** @Column(type="integer") */
+    public $category_id;
+
+    /**
+     * @BelongsTo(targetEntity="Category", keyFrom="category_id")
      */
-    public $categories;
+    public $category;
 
     /** @var array */
     protected static $properties = [
         'author' => 'getAuthor',
         'published' => 'isPublished',
         'accessible' => 'isAccessible',
-        'category_names' => 'getCategoryNames'
+        'categoryName' => 'getCategoryName'
     ];
 
     public static function getStatuses()
@@ -114,6 +116,11 @@ class Post implements \JsonSerializable
         return $this->user ? $this->user->username : null;
     }
 
+    public function getCategoryName()
+    {
+        return $this->category ? $this->category->name : null;
+    }
+
     public function isPublished()
     {
         return $this->status === self::STATUS_PUBLISHED && $this->date < new \DateTime;
@@ -122,19 +129,7 @@ class Post implements \JsonSerializable
     public function isAccessible(User $user = null)
     {
         return $this->isPublished() && $this->hasAccess($user ?: App::user());
-    }
-
-    /**
-     * @return array
-     */
-    public function getCategoryNames() {
-        if ($this->categories) {
-            return array_values(array_map(function ($category) {
-                return $category->name;
-            }, $this->categories));
-        }
-        return [];
-    }
+    }    
 
     /**
      * {@inheritdoc}
