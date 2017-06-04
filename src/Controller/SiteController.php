@@ -27,15 +27,17 @@ class SiteController
      */
     public function indexAction($page = 1, $category = null)
     {
-        $query = Post::where(['status = ?', 'date < ?'], [Post::STATUS_PUBLISHED, new \DateTime])->from('@blog_post')->where(function ($query) {
+        $query = Post::where(['status = ?', 'date < ?'], [Post::STATUS_PUBLISHED, new \DateTime]);
+        
+        $query->where(function ($query) {
             return $query->where('roles IS NULL')->whereInSet('roles', App::user()->roles, false, 'OR');
-        })->related('user', 'category');
+        });
 
-        // if ($category) {
-        //     $query->where(function ($query) use ($category) {
-        //         $query->orWhere(['category_id' => (int) $category]);
-        //     });
-        // }
+        if ($category) {
+            $query->where(function ($query) use ($category) {
+                $query->orWhere(['category_id = ?'], [$category]);
+            });
+        }
 
         if (!$limit = $this->blog->config('posts.posts_per_page')) {
             $limit = 10;
@@ -45,7 +47,7 @@ class SiteController
         $total = ceil($count / $limit);
         $page = max(1, min($total, $page));
 
-        $query->offset(($page - 1) * $limit)->limit($limit)->orderBy('date', 'DESC');
+        $query->offset(($page - 1) * $limit)->related('user', 'category')->limit($limit)->orderBy('date', 'DESC');
 
         foreach ($posts = $query->get() as $post) {
             $post->excerpt = App::content()->applyPlugins($post->excerpt, ['post' => $post, 'markdown' => $post->get('markdown')]);
