@@ -51,6 +51,6 @@ class Category implements \JsonSerializable
     }
 
     public function getPostsCount() {
-        return $this->posts ? $this->posts->count() : 0;
+        return count($this->posts);
     }
 }

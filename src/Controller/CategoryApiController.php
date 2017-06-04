@@ -32,7 +32,7 @@ class CategoryApiController
         $count = $query->count();
         $pages = ceil($count / $limit);
         $page  = max(0, min($pages - 1, $page));
-        $categories = array_values($query->offset($page * $limit)->limit($limit)->orderBy($order[1], $order[2])->get());
+        $categories = array_values($query->offset($page * $limit)->related('posts')->limit($limit)->orderBy($order[1], $order[2])->get());
         return compact('categories', 'pages', 'count');
     }
 
