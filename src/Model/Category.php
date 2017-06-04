@@ -21,9 +21,14 @@ class Category implements \JsonSerializable
     public $slug;
 
     /**
-     * @HasMany(targetEntity="Posts", keyFrom="id", keyTo="category_id")
+     * @HasMany(targetEntity="Post", keyFrom="id", keyTo="category_id")
      */
     public $posts;
+
+    /** @var array */
+    protected static $properties = [
+        'postsCount' => 'getPostsCount'        
+    ];
     
     /**
      * @Saving
@@ -43,5 +48,9 @@ class Category implements \JsonSerializable
         })->first()) {
             $category->slug = preg_replace('/-\d+$/', '', $category->slug).'-'.$i++;
         }
+    }
+
+    public function getPostsCount() {
+        return $this->posts ? $this->posts->count() : 0;
     }
 }

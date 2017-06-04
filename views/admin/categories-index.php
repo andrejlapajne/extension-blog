@@ -52,7 +52,7 @@
                         {{ category.slug }}
                     </td>
                     <td>
-                        {{ category.posts.length }}
+                        {{ category.postsCount }}
                     </td>                                        
                 </tr>
             </tbody>

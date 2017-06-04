@@ -83,7 +83,7 @@ class Post implements \JsonSerializable
         'author' => 'getAuthor',
         'published' => 'isPublished',
         'accessible' => 'isAccessible',
-        'categoryName' => 'getCategoryName'
+        'categoryName' => 'getCategoryName'        
     ];
 
     public static function getStatuses()
