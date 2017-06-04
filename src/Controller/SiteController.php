@@ -25,11 +25,17 @@ class SiteController
      * @Route("/")
      * @Route("/page/{page}", name="page", requirements={"page" = "\d+"})
      */
-    public function indexAction($page = 1, $category_id = 0)
+    public function indexAction($page = 1, $category = null)
     {
         $query = Post::where(['status = ?', 'date < ?'], [Post::STATUS_PUBLISHED, new \DateTime])->from('@blog_post')->where(function ($query) {
             return $query->where('roles IS NULL')->whereInSet('roles', App::user()->roles, false, 'OR');
         })->related('user', 'category');
+
+        // if ($category) {
+        //     $query->where(function ($query) use ($category) {
+        //         $query->orWhere(['category_id' => (int) $category]);
+        //     });
+        // }
 
         if (!$limit = $this->blog->config('posts.posts_per_page')) {
             $limit = 10;
@@ -162,8 +168,8 @@ class SiteController
     }
 
     /**
-      * @Route("/category/{id}", name="category")
-      * @Route("/category/{id}/page/{page}", name="category/page", requirements={"page" = "\d+", "id" = "\d+"})
+      * @Route("/category/{id}", name="category/id", requirements={"id" = "\d+"})
+      * @Route("/category/{id}/page/{page}", name="category/id/page", requirements={"page" = "\d+", "id" = "\d+"})
       */
      public function categoryAction($page = 1, $id = '')
      {

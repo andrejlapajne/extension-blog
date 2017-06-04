@@ -54,7 +54,7 @@
                 return '@blog/id?id=' + post.id;
             },
             categorylink: function (category) {
-                return '@blog/category?id=' + category.id;
+                return '@blog/category/id?id=' + category.id;
             }
 
         }
