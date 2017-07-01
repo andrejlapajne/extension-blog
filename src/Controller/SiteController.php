@@ -3,6 +3,7 @@
 namespace Pagekit\Blog\Controller;
 
 use Pagekit\Application as App;
+use Pagekit\Blog\Model\Category;
 use Pagekit\Blog\Model\Post;
 use Pagekit\Module\Module;
 
@@ -37,6 +38,11 @@ class SiteController
             $query->where(function ($query) use ($category) {
                 $query->orWhere(['category_id = ?'], [$category]);
             });
+            $cat = Category::find($category);
+            $title = __($cat->name);
+        }
+        else {
+            $title = __('Blog');
         }
 
         if (!$limit = $this->blog->config('posts.posts_per_page')) {
@@ -56,7 +62,7 @@ class SiteController
 
         return [
             '$view' => [
-                'title' => __('Blog'),
+                'title' => $title,
                 'name' => 'blog/posts.php',
                 'link:feed' => [
                     'rel' => 'alternate',
